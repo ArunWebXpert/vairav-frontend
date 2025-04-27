@@ -2,7 +2,7 @@ import AuthGuard from "@/guard/auth-guard";
 import AuthLayout from "@/layout/auth-layout";
 import { Route, Routes } from "react-router";
 
-import NotFound from "@pages/not-found";
+import NotFound from "@/pages/not-found";
 import React, { lazy, Suspense } from "react";
 
 //  preloaded Dashboard page for better user experience

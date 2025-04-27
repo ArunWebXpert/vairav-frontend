@@ -1,5 +1,6 @@
 import StatBarChart from "@/components/stat-bar-chart";
 import { SectionCards } from "@/components/section-cards";
+import LogTable from "@/components/feature/log-table/table";
 
 const Dashboard = () => {
   return (
@@ -10,7 +11,7 @@ const Dashboard = () => {
           <div className="px-4 lg:px-6">
             <StatBarChart />
           </div>
-          {/* <DataTable data={data} /> */}
+          <LogTable />
         </div>
       </div>
     </div>

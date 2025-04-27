@@ -1,6 +1,7 @@
 import {
   commonResponseSizeUrl,
   getBarChartUrl,
+  getTableDataUrl,
   mostActiveIpUrl,
   mostCommonMethodUrl,
   topAgentUrl,
@@ -16,6 +17,7 @@ import {
   ITopStatusCodeResponse,
   ITotalEventsResponse,
 } from "@/interface";
+import { ILogTableDataResponse } from "@/interface/response/log-stat/log-table-data.interface";
 
 import axiosInstance from "@/services/axios";
 
@@ -85,6 +87,24 @@ export const getBarChartData = async (
   options: IBarChartOptions
 ): Promise<IBarChartResponse> => {
   const url = getBarChartUrl(options);
+
+  const res = await axiosInstance.get(url);
+
+  return res.data;
+};
+
+// ============================================table data ==========================================================
+
+export interface ITableDataOptions {
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export const getTableData = async (
+  options: ITableDataOptions
+): Promise<ILogTableDataResponse> => {
+  const url = getTableDataUrl(options);
 
   const res = await axiosInstance.get(url);
 

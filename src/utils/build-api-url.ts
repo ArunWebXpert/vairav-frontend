@@ -13,5 +13,5 @@ export const buildApiUrl = (details: IUrl): string => {
 
   const queryParams = new URLSearchParams(filteredOptions).toString();
 
-  return `${details.module}?${queryParams}`;
+  return queryParams ? `${details.module}?${queryParams}` : details.module;
 };

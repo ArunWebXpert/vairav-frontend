@@ -1,4 +1,7 @@
-import { IBarChartOptions } from "@/api/function/logs-function";
+import {
+  IBarChartOptions,
+  ITableDataOptions,
+} from "@/api/function/logs-function";
 import { buildApiUrl } from "@/utils/build-api-url";
 
 export const totalEventsUrl: string = "/logs/total-events";
@@ -20,6 +23,15 @@ export const getBarChartUrl = (options: IBarChartOptions) => {
       date_option: options.dateOption,
       //   source: options.source,
     },
+  });
+
+  return url;
+};
+
+export const getTableDataUrl = (options: ITableDataOptions) => {
+  const url = buildApiUrl({
+    module: "logs/log-data",
+    options,
   });
 
   return url;

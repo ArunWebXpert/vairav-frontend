@@ -1,10 +1,11 @@
 import { ROUTES } from "@/constants";
+import { useAuthenticate } from "@/hooks/use-authenticate";
 // import useAuthStore from "@/store/use-auth-store";
 import { Navigate, Outlet, useLocation } from "react-router";
 
 const GuestGuard = () => {
-  // todo:
-  const { isAuthenticated } = { isAuthenticated: false };
+  const isAuthenticated = useAuthenticate();
+
   const { pathname } = useLocation();
 
   if (isAuthenticated) {

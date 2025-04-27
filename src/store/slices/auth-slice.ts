@@ -1,15 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface IAuthSlice {
-  accessToken: string;
-  email: string;
+interface IUserPayload {
+  _id: string;
   firstName: string;
-  isAuthenticated: boolean;
   lastName: string;
+  email: string;
   role: string;
+}
+interface IAuthSlice extends IUserPayload {
+  accessToken: string;
+  isAuthenticated: boolean;
 }
 
 const initialState: IAuthSlice = {
+  _id: "",
   accessToken: "",
   email: "",
   firstName: "",
@@ -22,7 +26,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setToken: (state, action) => {
+    setToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
       state.isAuthenticated = true;
     },
@@ -30,7 +34,7 @@ export const authSlice = createSlice({
       Object.assign(state, initialState);
       localStorage.clear();
     },
-    setUserDetails: (state, action) => {
+    setUserDetails: (state, action: PayloadAction<IUserPayload>) => {
       state.firstName = action.payload.firstName;
       state.lastName = action.payload.lastName;
       state.email = action.payload.email;

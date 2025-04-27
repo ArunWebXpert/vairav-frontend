@@ -1,18 +1,20 @@
+import { BrowserRouter, Route, Routes } from "react-router";
 import PrivateRoutes from "./private.routes";
 import PublicRoutes from "./public.routes";
-import { Route, Routes } from "react-router";
 
 const ProjectRoutes = () => {
-  const { isAuthenticated } = { isAuthenticated: true };
+  const { isAuthenticated } = { isAuthenticated: false };
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      {!isAuthenticated && <Route path="/*" element={<PublicRoutes />} />}
+    <BrowserRouter>
+      <Routes>
+        {/* Public Routes */}
+        {!isAuthenticated && <Route path="/*" element={<PublicRoutes />} />}
 
-      {/* Private Routes */}
-      {isAuthenticated && <Route path="/*" element={<PrivateRoutes />} />}
-    </Routes>
+        {/* Private Routes */}
+        {isAuthenticated && <Route path="/*" element={<PrivateRoutes />} />}
+      </Routes>
+    </BrowserRouter>
   );
 };
 

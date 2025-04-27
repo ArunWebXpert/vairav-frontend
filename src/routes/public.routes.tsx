@@ -1,6 +1,6 @@
 import GuestGuard from "@/guard/guest-guard";
 import LoginPage from "@/pages/(public)/login";
-import NotFound from "../pages/not-found";
+import NotFound from "@/pages/not-found";
 import PublicLayout from "@/layout/public.layout";
 import React from "react";
 import { ROUTES } from "../constants";

@@ -1,9 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import PrivateRoutes from "./private.routes";
 import PublicRoutes from "./public.routes";
+import { useAuthenticate } from "@/hooks/use-authenticate";
 
 const ProjectRoutes = () => {
-  const { isAuthenticated } = { isAuthenticated: false };
+  const isAuthenticated = useAuthenticate();
 
   return (
     <BrowserRouter>

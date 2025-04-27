@@ -6,19 +6,22 @@ import App from "./App.tsx";
 import "./index.css";
 import { Toaster } from "sonner";
 import { Ban, Check } from "lucide-react";
+import { NuqsAdapter } from "nuqs/adapters/react";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ReduxProvider>
-      <ReactQueryProvider>
-        <Toaster
-          icons={{
-            success: <Check />,
-            error: <Ban />,
-          }}
-        />
-        <App />
-      </ReactQueryProvider>
+      <NuqsAdapter>
+        <ReactQueryProvider>
+          <Toaster
+            icons={{
+              success: <Check />,
+              error: <Ban />,
+            }}
+          />
+          <App />
+        </ReactQueryProvider>
+      </NuqsAdapter>
     </ReduxProvider>
   </StrictMode>
 );

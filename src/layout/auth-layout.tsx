@@ -1,11 +1,19 @@
+import { AppSidebar } from "@/components/app-sidebar";
 import { Outlet } from "react-router";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SiteHeader } from "@/components/site-header";
 
 const AuthLayout = () => {
   return (
-    <div>
-      <h1>Sidebar</h1>
-      <Outlet />
-    </div>
+    <>
+      <SidebarProvider>
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
+          <Outlet />
+        </SidebarInset>
+      </SidebarProvider>
+    </>
   );
 };
 

@@ -3,7 +3,7 @@ export interface IPrivateRoutes {
 }
 
 export interface IPublicRoutes {
-  LOGIN: "/login";
+  LOGIN: string;
 }
 
 export interface IRoutes extends IPrivateRoutes, IPublicRoutes {}

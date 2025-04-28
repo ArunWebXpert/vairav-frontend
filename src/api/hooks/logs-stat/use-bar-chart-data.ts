@@ -1,11 +1,12 @@
-import { getBarChartData } from "@/api/function/logs-function";
-import { useQuery } from "@tanstack/react-query";
+import { getBarChartData } from '@/api/function/logs-function';
+import { IBarChartResponse } from '@/interface';
+import { useQuery } from '@tanstack/react-query';
 
 export const useBarChartData = () => {
-  const { isPending, data, isError } = useQuery({
-    queryKey: ["get-bar-chart-data"],
+  const { isPending, data, isError } = useQuery<IBarChartResponse, string>({
+    queryKey: ['get-bar-chart-data'],
     queryFn: async () => {
-      return await getBarChartData({ dateOption: "day" });
+      return await getBarChartData({ dateOption: 'day' });
     },
   });
 

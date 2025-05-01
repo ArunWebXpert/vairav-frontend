@@ -7,11 +7,7 @@ interface IUrl {
 
 // builds url based upon provided options
 export const buildApiUrl = (details: IUrl): string => {
-  const filteredOptions = Object.fromEntries(
-    Object.entries(details.options).map(([key, value]) => [key, value ?? ""])
-  );
-
-  const queryParams = new URLSearchParams(filteredOptions).toString();
+  const queryParams = new URLSearchParams(details.options).toString();
 
   return queryParams ? `${details.module}?${queryParams}` : details.module;
 };

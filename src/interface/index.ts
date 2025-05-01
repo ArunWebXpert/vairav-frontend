@@ -5,3 +5,4 @@ export * from "./language.interface";
 export * from "./response";
 export * from "./routes.interface";
 export * from "./validation-message.interface";
+export * from "./date-option.interface";

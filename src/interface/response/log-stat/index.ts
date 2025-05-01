@@ -5,3 +5,4 @@ export * from "./top-status-code.interface";
 export * from "./response-size.interface";
 export * from "./top-agent.interface";
 export * from "./bar-chart.response";
+export * from "./log-table-data.interface";

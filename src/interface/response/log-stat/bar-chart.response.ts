@@ -1,4 +1,4 @@
-interface IBarChart {
+export interface IBarChart {
   date: string;
   count: number;
 }

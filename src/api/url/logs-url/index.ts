@@ -18,7 +18,7 @@ export const topAgentUrl: string = "/logs/user-agent";
 
 export const getBarChartUrl = (options: IBarChartOptions) => {
   const url = buildApiUrl({
-    module: "logs/bar-chart-data",
+    module: "/logs/bar-chart-data",
     options: {
       date_option: options.dateOption,
       //   source: options.source,
@@ -30,7 +30,7 @@ export const getBarChartUrl = (options: IBarChartOptions) => {
 
 export const getTableDataUrl = (options: ITableDataOptions) => {
   const url = buildApiUrl({
-    module: "logs/log-data",
+    module: "/logs/log-data",
     options,
   });
 

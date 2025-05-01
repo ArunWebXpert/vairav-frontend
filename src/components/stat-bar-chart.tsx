@@ -1,6 +1,11 @@
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-
-import { useBarChartData } from "@/api/hooks/logs-stat/use-bar-chart-data";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
 import {
   Card,
   CardContent,
@@ -8,75 +13,201 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AnimatePresence, motion } from "framer-motion";
+import { BarChart2, Calendar, Download } from "lucide-react";
+import { useState } from "react";
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Button } from "./ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useBarChartData } from "@/api/hooks/logs-stat/use-bar-chart-data";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DateOptionType, IBarChart } from "@/interface";
 
 const chartConfig = {
   count: {
     label: "Total Events",
-    color: "orange",
+    color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
 
 const StatBarChart = () => {
-  const { data, isPending } = useBarChartData();
+  const [date, setDate] = useState<DateOptionType>("day");
 
-  if (isPending) {
-    return (
-      <div className="flex items-center justify-center h-[400px]">
-        Loading...
-      </div>
+  const { isPending, data, isError } = useBarChartData({
+    date_option: date,
+  });
+
+  const downloadCSV = () => {
+    if (!data || data.length === 0) {
+      return;
+    }
+
+    const headers = ["date", "count"];
+    const csvContent = [
+      headers.join(","),
+      ...data.map((item: IBarChart) => `${item.date},${item.count}`),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute(
+      "download",
+      `event_stats_${date === "day" ? "daily" : `${date}ly`}_data.csv`
     );
-  }
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <Card className="@container/card">
       <CardHeader className="relative">
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>Daily</CardDescription>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart2 className="h-5 w-5" />
+              Event Statistics
+            </CardTitle>
+            <CardDescription className="capitalize mt-1">
+              {date === "day"
+                ? "Daily"
+                : `${date === "month" ? "Monthly" : "Yearly"}`}{" "}
+              event distribution
+            </CardDescription>
+          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  className="cursor-pointer"
+                  variant="outline"
+                  size="icon"
+                  onClick={downloadCSV}
+                  disabled={isPending || !data || data.length === 0}
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Download CSV</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
 
-        <div className="flex gap-2 justify-center items-center">
-          <Button className="w-20 bg-blue-500 hover:bg-blue-700 cursor-pointer">
+        <div className="flex gap-2 justify-start items-center mt-4">
+          <Button
+            variant={date === "day" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setDate("day")}
+            className="w-24 cursor-pointer"
+          >
+            <Calendar className="h-4 w-4 mr-2" />
             Day
           </Button>
-          <Button className="w-20 bg-blue-500 hover:bg-blue-700 cursor-pointer">
+          <Button
+            variant={date === "month" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setDate("month")}
+            className="w-24 cursor-pointer"
+          >
+            <Calendar className="h-4 w-4 mr-2" />
             Month
           </Button>
-          <Button className="w-20 bg-blue-500 hover:bg-blue-700 cursor-pointer">
+          <Button
+            variant={date === "year" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setDate("year")}
+            className="w-24"
+          >
+            <Calendar className="h-4 w-4 mr-2 cursor-pointer" />
             Year
           </Button>
         </div>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[400px]">
-          <BarChart
-            defaultShowTooltip
-            accessibilityLayer
-            data={data}
-            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => {
-                return value;
-              }}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Bar dataKey="count" fill="var(--color-count)" radius={8} />
-          </BarChart>
-        </ChartContainer>
+        <AnimatePresence mode="wait">
+          {isPending ? (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center justify-center h-[400px] space-y-4"
+            >
+              <Skeleton className="h-[300px] w-full" />
+              <div className="text-sm text-muted-foreground">
+                Loading chart data...
+              </div>
+            </motion.div>
+          ) : isError ? (
+            <motion.div>{"No records found"}</motion.div>
+          ) : !data || data.length === 0 ? (
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center justify-center h-[400px] space-y-4"
+            >
+              <BarChart2 className="h-16 w-16 text-muted-foreground" />
+              <div className="text-xl font-medium">No data available</div>
+              <div className="text-sm text-muted-foreground">
+                Try selecting a different time period
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="chart"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ChartContainer config={chartConfig} className="h-[400px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    defaultShowTooltip
+                    accessibilityLayer
+                    data={data}
+                    margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis
+                      dataKey="date"
+                      tickLine={false}
+                      tickMargin={10}
+                      axisLine={false}
+                    />
+                    <YAxis tickLine={false} tickMargin={10} axisLine={false} />
+                    <ChartTooltip
+                      cursor={{ fill: "rgba(0, 0, 0, 0.05)" }}
+                      content={<ChartTooltipContent />}
+                    />
+                    <Bar
+                      dataKey="count"
+                      fill="var(--color-count)"
+                      radius={[4, 4, 0, 0]}
+                      animationDuration={1000}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </CardContent>
     </Card>
   );

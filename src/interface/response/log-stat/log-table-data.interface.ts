@@ -1,16 +1,16 @@
 export interface ILogItem {
   _id: string;
-  ip: string;
-  date: string;
-  country: string;
-  region: string;
   city: string;
-  source: string;
-  responseSize: number;
+  country: string;
+  date: string;
+  ip: string;
   method: string;
-  url: string;
   protocol: string;
+  region: string;
+  responseSize: number;
+  source: string;
   statusCode: number;
+  url: string;
 }
 
 interface PaginationMeta {
